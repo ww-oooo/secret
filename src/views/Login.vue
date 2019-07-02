@@ -30,9 +30,12 @@
 <script>
 import Cookie from 'js-cookie'
 import {mapActions} from 'vuex'
+import {accountLogin} from '@/service/getData'
 export default {
   data: function() {
     return {
+      _data:  null, //传递的用户信息
+      userInfo: null, //获取到的用户信息
       ruleForm: {
         username: "",
         password: ""
@@ -46,24 +49,31 @@ export default {
     };
   },
   methods: {
-    submitForm(formName) {
+    validate(formName) {
+      let flag = true
       this.$refs[formName].validate(valid => {
-        if (valid) {
-          const _data = {
-            'account': this.ruleForm.username,
-            'password': this.ruleForm.password
-          }
-          debugger
-          this.getUserInfo()
-          Cookie.set('accountData', _data)
-          this.$router.push("/")
-        } else {
-          console.log("error submit!!")
-          return false
+        if (!valid) flag = false 
+        const _data = {
+          'account': this.ruleForm.username,
+          'password': this.ruleForm.password
         }
-      });
+        this._data = _data
+      })
+      return flag
     },
-    ...mapActions(['getUserInfo'])
+    // 发送登录信息
+    async submitForm(formName) {
+      if(!this.validate(formName)) return
+      //用户名登录
+      this.userInfo = await accountLogin(this._data);
+      debugger
+      // this.getUserInfo()
+      // Cookie.set('accountData', _data)
+      // this.$router.push("/")
+    },
+
+
+    // ...mapActions(['getUserInfo'])
   }
 };
 </script>

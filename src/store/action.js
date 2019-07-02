@@ -13,7 +13,7 @@ export default {
 		commit
 	}) {
         debugger
-		// let res = await getUser();
-		commit(GET_USERINFO, res)
+		let res = await getUser();
+		// commit(GET_USERINFO, res)
 	}
 }
